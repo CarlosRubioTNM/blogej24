@@ -1,3 +1,4 @@
+from typing import Any
 from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import (TemplateView,
@@ -51,7 +52,7 @@ class DraftListView(LoginRequiredMixin, ListView):
     model = Post
 
     def get_queryset(self) -> QuerySet[Any]:
-        return Post.objects.filter(published_date_isnull = True).order_by('create_date')
+        return Post.objects.filter(published_date__isnull = True).order_by('create_date')
     
 
 #################################################################
@@ -60,13 +61,13 @@ class DraftListView(LoginRequiredMixin, ListView):
 
 @login_required
 def post_publish(request, pk):
-    post = get_object_or_404(Post, pk)
+    post = get_object_or_404(Post, pk=pk)
     post.publish()
     return redirect('post_detail', pk=post.pk)
 
 @login_required
 def add_comment_to_post(request, pk):
-    post = get_object_or_404(Post, pk)
+    post = get_object_or_404(Post, pk=pk)
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
