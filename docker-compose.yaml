@@ -1,0 +1,11 @@
+version: "26.1"
+services:
+  app:
+    build: .
+    volumes:
+      - .:/django
+    ports:
+      - 8000:8000
+    image: myblog:django
+    container_name: app_container
+    command: gunicorn develop_site.wsgi:aplication --bind 0.0.0.0:8000
